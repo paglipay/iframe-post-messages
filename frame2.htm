@@ -86,7 +86,8 @@
           }
         }
       }
-      console.log("message: ", message);
+        console.log("message: ", message);
+      console.log("OBJtoXML: ", OBJtoXML(message));
     }
 
     if (window.addEventListener) {
@@ -95,5 +96,34 @@
     } else {
       window.attachEvent("onmessage", displayMessage);
     }
+
+
+
+    var InputJSON =
+      "{College:{entry: [{ Student : 'shiv', Roll_No: 12},{ Student : 'yadav',Roll_No: 56}]}}";
+    var output = eval("OBJtoXML(" + InputJSON + ");");
+
+    function OBJtoXML(obj) {
+      var xml = "";
+      for (var prop in obj) {
+        xml += obj[prop] instanceof Array ? "" : "<" + prop + ">";
+        if (obj[prop] instanceof Array) {
+          for (var array in obj[prop]) {
+            xml += "<" + prop + ">";
+            xml += OBJtoXML(new Object(obj[prop][array]));
+            xml += "</" + prop + ">";
+          }
+        } else if (typeof obj[prop] == "object") {
+          xml += OBJtoXML(new Object(obj[prop]));
+        } else {
+          xml += obj[prop];
+        }
+        xml += obj[prop] instanceof Array ? "" : "</" + prop + ">";
+      }
+      var xml = xml.replace(/<\/?[0-9]{1,}>/g, "");
+      return xml;
+    }
+
+    console.log(output);
   </script>
 </html>
