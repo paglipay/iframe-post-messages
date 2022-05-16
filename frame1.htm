@@ -21,15 +21,17 @@
   </head>
 
   <body>
-    <h1>Frame 1</h1>
-    <div id="received-message1" name="received-message" class="show">
-      <h1>1</h1>
-    </div>
-    <div id="received-message2" name="received-message" class="hide">
-      <h1>2</h1>
-    </div>
-    <div id="received-message3" name="received-message" class="hide">
-      <h1>3</h1>
+    <div id="body-div">
+      <h1>Frame 1</h1>
+      <div id="received-message1" name="received-message" class="show">
+        <h1>1</h1>
+      </div>
+      <div id="received-message2" name="received-message" class="hide">
+        <h1>2</h1>
+      </div>
+      <div id="received-message3" name="received-message" class="hide">
+        <h1>3</h1>
+      </div>
     </div>
   </body>
   <script>
@@ -53,14 +55,20 @@
 
     function xml2json(xml) {
       try {
-        var obj = {};
+        let obj = {};
+        // var nodeAtts;
         if (xml.children.length > 0) {
           for (var i = 0; i < xml.children.length; i++) {
             var item = xml.children.item(i);
-            var nodeName = item.nodeName;
+            console.log("item: ", item);
+            var nodeName = item.nodeName.toLowerCase();
+            var nodeId = item.id;
+            console.log("nodeName: ", nodeName, "nodeId: ", nodeId);
 
             if (typeof obj[nodeName] == "undefined") {
+
               obj[nodeName] = xml2json(item);
+
             } else {
               if (typeof obj[nodeName].push == "undefined") {
                 var old = obj[nodeName];
@@ -69,6 +77,7 @@
                 obj[nodeName].push(old);
               }
               obj[nodeName].push(xml2json(item));
+              
             }
           }
         } else {
@@ -80,6 +89,15 @@
       }
     }
 
+    // const Elem = (e) => ({
+    //   tagName: e.tagName,
+    //   textContent: e.textContent,
+    //   attributes: Array.from(e.attributes, ({ name, value }) => [name, value]),
+    //   children: Array.from(e.children, Elem),
+    // });
+
+    // const html2json = (e) => JSON.stringify(Elem(e), null, "  ");
+
     if (window.addEventListener) {
       // For standards-compliant web browsers
       window.addEventListener("message", displayMessage, false);
@@ -88,7 +106,8 @@
     }
     window.onload = function () {
       //   const col = document.getElementsByName("received-message");
-      const col = document.getElementsByTagName("body");
+      const col = document.getElementById("body-div");
+      //   const col = document.getElementsByTagName("body");
       console.log(col);
       let data = [];
       for (let i = 0; i < col.length; i++) {
@@ -96,7 +115,7 @@
       }
       var iframeWin =
         parent.document.getElementById("da-iframe2").contentWindow;
-      iframeWin.postMessage(xml2json(col[0]), "http://127.0.0.1:5500");
+      iframeWin.postMessage(xml2json(col), "http://127.0.0.1:5500");
     };
   </script>
 </html>

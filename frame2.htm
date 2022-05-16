@@ -86,7 +86,7 @@
           }
         }
       }
-        console.log("message: ", message);
+      console.log("message: ", message);
       console.log("OBJtoXML: ", OBJtoXML(message));
     }
 
@@ -96,8 +96,6 @@
     } else {
       window.attachEvent("onmessage", displayMessage);
     }
-
-
 
     var InputJSON =
       "{College:{entry: [{ Student : 'shiv', Roll_No: 12},{ Student : 'yadav',Roll_No: 56}]}}";
@@ -120,7 +118,7 @@
         }
         xml += obj[prop] instanceof Array ? "" : "</" + prop + ">";
       }
-      var xml = xml.replace(/<\/?[0-9]{1,}>/g, "");
+    //   var xml = xml.replace(/<\/?[0-9]{1,}>/g, "");
       return xml;
     }
 
