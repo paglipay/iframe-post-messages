@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      .hide {
+        display: none;
+      }
+
+      .show {
+        display: block;
+        border: black;
+        border-style: solid;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Frame 1</h1>
+    <div id="received-message1" name="received-message" class="show">
+      <h1>1</h1>
+    </div>
+    <div id="received-message2" name="received-message" class="hide">
+      <h1>2</h1>
+    </div>
+    <div id="received-message3" name="received-message" class="hide">
+      <h1>3</h1>
+    </div>
+  </body>
+  <script>
+    function displayMessage(evt) {
+      var message;
+      let i = 1;
+      if (evt.origin !== "http://127.0.0.1:5500") {
+        message = "Incorrect evt.origin";
+      } else {
+        // message = "I got " + evt.data + " from " + evt.origin;
+        message = JSON.parse(evt.data);
+        i = message
+        const collection = document.getElementsByName("received-message");
+        // for (let i = 0; i < collection.length; i++) {
+        // if (collection[i].id == JSON.parse(evt.data).message) {
+        //     collection[i].setAttribute("class", "show")
+        // } else {
+        //     collection[i].setAttribute("class", "hide")
+        // }
+        // }
+        if (collection[i].getAttribute("class") === "hide") {
+          collection[i].setAttribute("class", "show");
+        } else {
+          collection[i].setAttribute("class", "hide");
+        }
+      }
+      console.log(message);
+    }
+
+    if (window.addEventListener) {
+      // For standards-compliant web browsers
+      window.addEventListener("message", displayMessage, false);
+    } else {
+      window.attachEvent("onmessage", displayMessage);
+    }
+    window.onload = function () {
+      const col = document.getElementsByName("received-message");
+      console.log(col);
+      let data = [];
+      for (let i = 0; i < col.length; i++) {
+        data.push(i);
+      }
+      var iframeWin =
+        parent.document.getElementById("da-iframe2").contentWindow;
+      iframeWin.postMessage(data, "http://127.0.0.1:5500");
+    };
+  </script>
+</html>
