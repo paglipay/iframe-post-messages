@@ -35,28 +35,21 @@
   <script>
     function displayMessage(evt) {
       var message;
-      let i = 1;
+      let id = 0;
       if (evt.origin !== "http://127.0.0.1:5500") {
         message = "Incorrect evt.origin";
       } else {
-        // message = "I got " + evt.data + " from " + evt.origin;
-        message = JSON.parse(evt.data);
-        i = message
-        const collection = document.getElementsByName("received-message");
-        // for (let i = 0; i < collection.length; i++) {
-        // if (collection[i].id == JSON.parse(evt.data).message) {
-        //     collection[i].setAttribute("class", "show")
-        // } else {
-        //     collection[i].setAttribute("class", "hide")
-        // }
-        // }
-        if (collection[i].getAttribute("class") === "hide") {
+        id = evt.data.id;
+      }
+      const collection = document.getElementsByName("received-message");
+      for (let i = 0; i < collection.length; i++) {
+        if (i == id) {
           collection[i].setAttribute("class", "show");
         } else {
           collection[i].setAttribute("class", "hide");
         }
       }
-      console.log(message);
+      console.log("evt.data: ", evt.data);
     }
 
     if (window.addEventListener) {

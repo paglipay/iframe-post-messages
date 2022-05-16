@@ -1,45 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <h1>Parent</h1>
-    <iframe id="da-iframe" src="./frame1.htm" frameborder="1" style="height: 300px; border: 1px solid black"></iframe>
-    <iframe id="da-iframe2" src="./frame2.htm" frameborder="1" style="height: 300px; border: 1px solid black"></iframe>
-</body>
-<script>
+    <iframe
+      id="da-iframe"
+      src="./frame1.htm"
+      frameborder="1"
+      style="height: 300px; border: 1px solid black"
+    ></iframe>
+    <iframe
+      id="da-iframe2"
+      src="./frame2.htm"
+      frameborder="1"
+      style="height: 300px; border: 1px solid black"
+    ></iframe>
+  </body>
+  <script>
     window.onload = function () {
-        console.log("onload")
+      console.log("onload");
+    };
+
+    function scrollTop(evt) {
+      console.log("scrollTop");
     }
 
-    function scrollTop (evt){
-        console.log("scrollTop")
+    function tabSwitch(evt) {
+      console.log("tabSwitch: ", evt);
+      var iframeWin = document.getElementById("da-iframe").contentWindow;
+      iframeWin.postMessage(evt, "http://127.0.0.1:5500");
     }
 
-    function tabSwitch (evt){
-        console.log("tabSwitch")        
+    function customTab(evt) {
+      console.log("customTab", evt);
     }
 
-    function customTab (evt){
-        console.log("customTab")        
+    function vidPlay(evt) {
+      console.log("vidPlay");
     }
 
-    function vidPlay (evt){
-        console.log("vidPlay")
-    }
+    function messageReceived(evt) {
+      var message;
+      let i = 1;
+      if (evt.origin !== "http://127.0.0.1:5500") {
+        message = "Incorrect evt.origin";
+      } else {
+        message = JSON.parse(evt.data);
+        if (message.action.type === "tabSwitch") {
+          tabSwitch(message.action.payload);
+        } else if (message.action.type === "customTab") {
+          customTab(message.action.payload);
+        }
+      }
 
+      console.log(message);
+    }
     if (window.addEventListener) {
-        // For standards-compliant web browsers
-        window.addEventListener("message", displayMessage, false);
+      // For standards-compliant web browsers
+      window.addEventListener("message", messageReceived, false);
     } else {
-        window.attachEvent("onmessage", displayMessage);
+      window.attachEvent("onmessage", messageReceived);
     }
-</script>
-
+  </script>
 </html>

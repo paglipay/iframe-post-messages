@@ -1,69 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=<device-width>, initial-scale=1.0" />
     <title>Document</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <h1>Frame 2</h1>
     <button id="btn1">Press1</button>
     <button id="btn2">Press2</button>
     <button id="btn3">Press3</button>
-</body>
-<script>
+  </body>
+  <script>
     window.onload = function () {
-        var iframeWin = parent.document.getElementById("da-iframe").contentWindow,
-            btn1 = document.getElementById("btn1"),
-            btn2 = document.getElementById("btn2"),
-            btn3 = document.getElementById("btn3");
+      //   var iframeWin = parent.document.getElementById("da-iframe").contentWindow,
+      var iframeWin = parent,
+        btns = document.getElementsByTagName("button");
+      // btn1 = document.getElementById("btn1"),
+      // btn2 = document.getElementById("btn2"),
+      // btn3 = document.getElementById("btn3");
+      console.log(btns);
 
-        btn1.onclick = function () {
-            iframeWin.postMessage(JSON.stringify({"message":1, "myCallBack":"HI"}) , "http://127.0.0.1:5500");
-            return false;
+      for (let b = 0; b < btns.length; b++) {
+        btns[b].onclick = function () {
+          iframeWin.postMessage(
+            JSON.stringify({
+              message: b,
+              action: { type: "tabSwitch", payload: { id: b } },
+            }),
+            "http://127.0.0.1:5500"
+          );
+          return false;
         };
+      }
 
-        btn2.onclick = function () {
-            iframeWin.postMessage(JSON.stringify({"message":2, "myCallBack":"HI"}), "http://127.0.0.1:5500");
-            return false;
-        };
+      //   btn1.onclick = function () {
+      //     iframeWin.postMessage(
+      //       JSON.stringify({
+      //         message: 1,
+      //         action: { type: "tabSwitch", payload: {} },
+      //       }),
+      //       "http://127.0.0.1:5500"
+      //     );
+      //     return false;
+      //   };
 
-        btn3.onclick = function () {
-            iframeWin.postMessage(JSON.stringify({"message":3, "myCallBack":"HI"}), "http://127.0.0.1:5500");
-            return false;
-        };
+      //   btn2.onclick = function () {
+      //     iframeWin.postMessage(
+      //       JSON.stringify({
+      //         message: 2,
+      //         action: { type: "tabSwitch", payload: {} },
+      //       }),
+      //       "http://127.0.0.1:5500"
+      //     );
+      //     return false;
+      //   };
 
+      //   btn3.onclick = function () {
+      //     iframeWin.postMessage(
+      //       JSON.stringify({
+      //         message: 3,
+      //         action: { type: "tabSwitch", payload: {} },
+      //       }),
+      //       "http://127.0.0.1:5500"
+      //     );
+      //     return false;
+      //   };
     };
 
     function displayMessage(evt) {
-        var message;
-        if (evt.origin !== "http://127.0.0.1:5500") {
-            message = "Incorrect evt.origin";
-        } else {
-            // message = "I got " + evt.data + " from " + evt.origin;
-            message = evt.data;
-            const collection = document.getElementsByName("received-message");
-            for (let i = 0; i < collection.length; i++) {
-                if (collection[i].id == evt.data) {
-                    collection[i].setAttribute("class", "show")
-                } else {
-                    collection[i].setAttribute("class", "hide")
-                }
-            }
+      var message;
+      if (evt.origin !== "http://127.0.0.1:5500") {
+        message = "Incorrect evt.origin";
+      } else {
+        // message = "I got " + evt.data + " from " + evt.origin;
+        message = evt.data;
+        const collection = document.getElementsByName("received-message");
+        for (let i = 0; i < collection.length; i++) {
+          if (collection[i].id == evt.data) {
+            collection[i].setAttribute("class", "show");
+          } else {
+            collection[i].setAttribute("class", "hide");
+          }
         }
-        console.log("message: ", message)
-
+      }
+      console.log("message: ", message);
     }
 
     if (window.addEventListener) {
-        // For standards-compliant web browsers
-        window.addEventListener("message", displayMessage, false);
+      // For standards-compliant web browsers
+      window.addEventListener("message", displayMessage, false);
     } else {
-        window.attachEvent("onmessage", displayMessage);
+      window.attachEvent("onmessage", displayMessage);
     }
-</script>
-
+  </script>
 </html>
