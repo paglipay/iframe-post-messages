@@ -21,16 +21,22 @@
   </head>
 
   <body>
-    <div id="body-div">
+    <div id="bodydiv">
       <h1>Frame 1</h1>
       <div id="received-message1" name="received-message" class="show">
-        <h1>1</h1>
+        <h1>1a</h1>
       </div>
       <div id="received-message2" name="received-message" class="hide">
-        <h1>2</h1>
+        <h1>2a</h1>
       </div>
       <div id="received-message3" name="received-message" class="hide">
-        <h1>3</h1>
+        <h1>3a</h1>
+      </div>
+      <div id="received-message4" name="received-message" class="hide">
+        <h1>4a</h1>
+      </div>
+      <div id="received-message5" name="received-message" class="hide">
+        <h1>5</h1>
       </div>
     </div>
   </body>
@@ -51,52 +57,18 @@
         }
       }
       console.log("evt.data: ", evt.data);
-    }
 
-    function xml2json(xml) {
-      try {
-        let obj = {};
-        // var nodeAtts;
-        if (xml.children.length > 0) {
-          for (var i = 0; i < xml.children.length; i++) {
-            var item = xml.children.item(i);
-            console.log("item: ", item);
-            var nodeName = item.nodeName.toLowerCase();
-            var nodeId = item.id;
-            console.log("nodeName: ", nodeName, "nodeId: ", nodeId);
-
-            if (typeof obj[nodeName] == "undefined") {
-
-              obj[nodeName] = xml2json(item);
-
-            } else {
-              if (typeof obj[nodeName].push == "undefined") {
-                var old = obj[nodeName];
-
-                obj[nodeName] = [];
-                obj[nodeName].push(old);
-              }
-              obj[nodeName].push(xml2json(item));
-              
-            }
-          }
-        } else {
-          obj = xml.textContent;
-        }
-        return obj;
-      } catch (e) {
-        console.log(e.message);
+      const col = document.getElementById("bodydiv");
+      //   const col = document.getElementsByTagName("body");
+      console.log(col);
+      let data = [];
+      for (let i = 0; i < col.length; i++) {
+        data.push(i);
       }
+      var iframeWin =
+        parent.document.getElementById("da-iframe2").contentWindow;
+      iframeWin.postMessage({ "bodydiv": col.outerHTML }, "http://127.0.0.1:5500");
     }
-
-    // const Elem = (e) => ({
-    //   tagName: e.tagName,
-    //   textContent: e.textContent,
-    //   attributes: Array.from(e.attributes, ({ name, value }) => [name, value]),
-    //   children: Array.from(e.children, Elem),
-    // });
-
-    // const html2json = (e) => JSON.stringify(Elem(e), null, "  ");
 
     if (window.addEventListener) {
       // For standards-compliant web browsers
@@ -106,7 +78,7 @@
     }
     window.onload = function () {
       //   const col = document.getElementsByName("received-message");
-      const col = document.getElementById("body-div");
+      const col = document.getElementById("bodydiv");
       //   const col = document.getElementsByTagName("body");
       console.log(col);
       let data = [];
@@ -115,7 +87,7 @@
       }
       var iframeWin =
         parent.document.getElementById("da-iframe2").contentWindow;
-      iframeWin.postMessage(xml2json(col), "http://127.0.0.1:5500");
+      iframeWin.postMessage({ "bodydiv": col.outerHTML }, "http://127.0.0.1:5500");
     };
   </script>
 </html>

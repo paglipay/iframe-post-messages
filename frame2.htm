@@ -5,70 +5,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=<device-width>, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      .hide {
+        display: none;
+      }
+
+      .show {
+        display: block;
+        border: black;
+        border-style: solid;
+        text-align: center;
+      }
+    </style>
   </head>
 
   <body>
+    <div id="root"></div>
     <h1>Frame 2</h1>
-    <button id="btn1">Press1</button>
-    <button id="btn2">Press2</button>
-    <button id="btn3">Press3</button>
+    <div id="btns"></div>
   </body>
   <script>
-    window.onload = function () {
-      //   var iframeWin = parent.document.getElementById("da-iframe").contentWindow,
-      var iframeWin = parent,
-        btns = document.getElementsByTagName("button");
-      // btn1 = document.getElementById("btn1"),
-      // btn2 = document.getElementById("btn2"),
-      // btn3 = document.getElementById("btn3");
-      console.log(btns);
-
-      for (let b = 0; b < btns.length; b++) {
-        btns[b].onclick = function () {
-          iframeWin.postMessage(
-            JSON.stringify({
-              message: b,
-              action: { type: "tabSwitch", payload: { id: b } },
-            }),
-            "http://127.0.0.1:5500"
-          );
-          return false;
-        };
-      }
-
-      //   btn1.onclick = function () {
-      //     iframeWin.postMessage(
-      //       JSON.stringify({
-      //         message: 1,
-      //         action: { type: "tabSwitch", payload: {} },
-      //       }),
-      //       "http://127.0.0.1:5500"
-      //     );
-      //     return false;
-      //   };
-
-      //   btn2.onclick = function () {
-      //     iframeWin.postMessage(
-      //       JSON.stringify({
-      //         message: 2,
-      //         action: { type: "tabSwitch", payload: {} },
-      //       }),
-      //       "http://127.0.0.1:5500"
-      //     );
-      //     return false;
-      //   };
-
-      //   btn3.onclick = function () {
-      //     iframeWin.postMessage(
-      //       JSON.stringify({
-      //         message: 3,
-      //         action: { type: "tabSwitch", payload: {} },
-      //       }),
-      //       "http://127.0.0.1:5500"
-      //     );
-      //     return false;
-      //   };
-    };
 
     function displayMessage(evt) {
       var message;
@@ -87,7 +43,37 @@
         }
       }
       console.log("message: ", message);
-      console.log("OBJtoXML: ", OBJtoXML(message));
+    //   document.getElementById("root").innerHTML = message["bodydiv"];
+      var doc = new DOMParser().parseFromString(message["bodydiv"], "text/xml");
+      console.log("doc: ", doc);
+      console.log(
+        "received-message: ",
+        doc.getElementsByName("received-message")
+      );
+      const btnsDiv = document.getElementById("btns");
+      btnsDiv.innerHTML = ''
+      var iframeWin = parent;
+      for (
+        let b = 0;
+        b < doc.getElementsByName("received-message").length;
+        b++
+      ) {
+        const btn = document.createElement("button");
+        // btn.innerHTML = "Show " + (b + 1);
+        btn.innerHTML = "" + doc.getElementsByName("received-message")[b].innerHTML;
+        // btn.innerHTML += "" + doc.getElementsByName("received-message")[b].id;
+        btn.onclick = function () {
+          iframeWin.postMessage(
+            JSON.stringify({
+              message: b,
+              action: { type: "tabSwitch", payload: { id: b } },
+            }),
+            "http://127.0.0.1:5500"
+          );
+          return false;
+        };
+        btnsDiv.appendChild(btn);
+      }
     }
 
     if (window.addEventListener) {
@@ -96,32 +82,5 @@
     } else {
       window.attachEvent("onmessage", displayMessage);
     }
-
-    var InputJSON =
-      "{College:{entry: [{ Student : 'shiv', Roll_No: 12},{ Student : 'yadav',Roll_No: 56}]}}";
-    var output = eval("OBJtoXML(" + InputJSON + ");");
-
-    function OBJtoXML(obj) {
-      var xml = "";
-      for (var prop in obj) {
-        xml += obj[prop] instanceof Array ? "" : "<" + prop + ">";
-        if (obj[prop] instanceof Array) {
-          for (var array in obj[prop]) {
-            xml += "<" + prop + ">";
-            xml += OBJtoXML(new Object(obj[prop][array]));
-            xml += "</" + prop + ">";
-          }
-        } else if (typeof obj[prop] == "object") {
-          xml += OBJtoXML(new Object(obj[prop]));
-        } else {
-          xml += obj[prop];
-        }
-        xml += obj[prop] instanceof Array ? "" : "</" + prop + ">";
-      }
-    //   var xml = xml.replace(/<\/?[0-9]{1,}>/g, "");
-      return xml;
-    }
-
-    console.log(output);
   </script>
 </html>
