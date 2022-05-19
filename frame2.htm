@@ -106,7 +106,7 @@
         btn.onclick = function () {
           iframeWin.postMessage(
             {
-              action: { type: "tabSwitch", payload: { id: b } },
+              action: { type: "scrollToFrame", payload: { id: b } },
             },
             "http://127.0.0.1:5500"
           );

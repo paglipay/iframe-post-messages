@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script>
-      let messagesObj = { action: { type: "", payload: {} } };
+      let messagesObj = {};
       window.onload = function () {
         console.log("onload");
         const col = document.getElementById("iframes");
@@ -26,13 +26,12 @@
             console.log("do thi", message);
           } else {
             message = evt.data;
-
-            console.log('else: ', message);
-            console.log('else: ', message.action);
             if (message['action']['type'] === "tabSwitch") {
               tabSwitch(message.action.payload);
             } else if (message['action']['type'] === "customTab") {
               customTab(message.action.payload);
+            } else if (message['action']['type'] === "scrollToFrame") {
+              scrollToFrame(message.action.payload);
             } else {
               messagesObj["iframe1"] = message["iframe1"];
 
@@ -113,6 +112,8 @@
   <script>
     function scrollToFrame(evt) {
       console.log("scrollToFrame: ", evt);
+      // document.getElementById("da-iframe9").scrollIntoView();
+      document.getElementById("iframes").getElementsByTagName("iframe")[evt.id].scrollIntoView();
     }
 
     function scrollTop(evt) {
