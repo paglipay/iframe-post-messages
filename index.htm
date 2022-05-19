@@ -5,30 +5,118 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <script>
+      let messagesObj = { action: { type: "", payload: {} } };
+      window.onload = function () {
+        console.log("onload");
+        const col = document.getElementById("iframes");
+        console.log(col);
+        messagesObj["iframes"] = col.outerHTML;
+        console.log("messagesObj: ", messagesObj);
+        // var iframeWin = document.getElementById("da-iframe2").contentWindow;
+        // iframeWin.postMessage({ "iframes": col.outerHTML }, "http://127.0.0.1:5500");
+      };
+      function messageReceived(evt) {
+        let message;
+        let i = 1;
+        if (evt.origin !== "http://127.0.0.1:5500") {
+          message = "Incorrect evt.origin";
+        } else {
+          if (0) {
+            console.log("do thi", message);
+          } else {
+            message = evt.data;
+
+            console.log('else: ', message);
+            console.log('else: ', message.action);
+            if (message['action']['type'] === "tabSwitch") {
+              tabSwitch(message.action.payload);
+            } else if (message['action']['type'] === "customTab") {
+              customTab(message.action.payload);
+            } else {
+              messagesObj["iframe1"] = message["iframe1"];
+
+              setTimeout(() => {
+                var iframeWin =
+                  document.getElementById("da-iframe2").contentWindow;
+                iframeWin.postMessage(messagesObj, "http://127.0.0.1:5500");
+              }, 1000);
+            }
+          }
+        }
+
+        console.log("messagesObj: ", messagesObj);
+      }
+
+      if (window.addEventListener) {
+        // For standards-compliant web browsers
+        window.addEventListener("message", messageReceived, false);
+      } else {
+        window.attachEvent("onmessage", messageReceived);
+      }
+    </script>
   </head>
 
-  <body>
+  <body id="root">
     <h1>Parent</h1>
-    <iframe
-      id="da-iframe"
-      src="./frame1.htm"
-      frameborder="1"
-      style="height: 300px; border: 1px solid black"
-    ></iframe>
     <iframe
       id="da-iframe2"
       src="./frame2.htm"
       frameborder="1"
-      style="height: 300px; border: 1px solid black"
+      style="display: block; height: 300px; border: 1px solid black"
     ></iframe>
+    <iframe
+      id="da-iframe"
+      src="./frame1.htm"
+      frameborder="1"
+      style="display: block; height: 300px; border: 1px solid black"
+    ></iframe>
+    <div id="iframes">
+      <iframe
+        id="da-iframe"
+        src="./frame3.htm"
+        frameborder="1"
+        style="display: block; height: 300px; border: 1px solid black"
+      ></iframe>
+      <iframe
+        id="da-iframe"
+        src="./frame3.htm"
+        frameborder="1"
+        style="display: block; height: 300px; border: 1px solid black"
+      ></iframe>
+      <iframe
+        id="da-iframe"
+        src="./frame3.htm"
+        frameborder="1"
+        style="display: block; height: 300px; border: 1px solid black"
+      ></iframe>
+      <iframe
+        id="da-iframe"
+        src="./frame3.htm"
+        frameborder="1"
+        style="display: block; height: 300px; border: 1px solid black"
+      ></iframe>
+      <iframe
+        id="da-iframe"
+        src="./frame3.htm"
+        frameborder="1"
+        style="display: block; height: 300px; border: 1px solid black"
+      ></iframe>
+      <iframe
+        id="da-iframe"
+        src="./frame3.htm"
+        frameborder="1"
+        style="display: block; height: 300px; border: 1px solid black"
+      ></iframe>
+    </div>
   </body>
   <script>
-    window.onload = function () {
-      console.log("onload");
-    };
+    function scrollToFrame(evt) {
+      console.log("scrollToFrame: ", evt);
+    }
 
     function scrollTop(evt) {
-      console.log("scrollTop");
+      console.log("scrollTop", evt);
     }
 
     function tabSwitch(evt) {
@@ -42,30 +130,7 @@
     }
 
     function vidPlay(evt) {
-      console.log("vidPlay");
-    }
-
-    function messageReceived(evt) {
-      var message;
-      let i = 1;
-      if (evt.origin !== "http://127.0.0.1:5500") {
-        message = "Incorrect evt.origin";
-      } else {
-        message = JSON.parse(evt.data);
-        if (message.action.type === "tabSwitch") {
-          tabSwitch(message.action.payload);
-        } else if (message.action.type === "customTab") {
-          customTab(message.action.payload);
-        }
-      }
-
-      console.log(message);
-    }
-    if (window.addEventListener) {
-      // For standards-compliant web browsers
-      window.addEventListener("message", messageReceived, false);
-    } else {
-      window.attachEvent("onmessage", messageReceived);
+      console.log("vidPlay", evt);
     }
   </script>
 </html>
