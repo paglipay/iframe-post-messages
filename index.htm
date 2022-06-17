@@ -22,28 +22,31 @@
         if (evt.origin !== "http://127.0.0.1:5500") {
           message = "Incorrect evt.origin";
         } else {
-          if (0) {
-            console.log("do thi", message);
-          } else {
-            message = evt.data;
-            if (message['action']['type'] === "tabSwitch") {
-              tabSwitch(message.action.payload);
-            } else if (message['action']['type'] === "customTab") {
-              customTab(message.action.payload);
-            } else if (message['action']['type'] === "scrollToFrame") {
-              scrollToFrame(message.action.payload);
-            } else {
-              messagesObj["iframe1"] = message["iframe1"];
+          message = evt.data;
 
+          switch (message["action"]["type"]) {
+            case "tabSwitch":
+              tabSwitch(message.action.payload);
+              break;
+            case "scrollToFrame":
+              scrollToFrame(message.action.payload);
+              break;
+            case "customTab":
+              customTab(message.action.payload);
+              break;
+            default:
+              if (message["iframe1"]) {
+                messagesObj["iframe1"] = message["iframe1"];
+              } else {
+                messagesObj["iframe1a"] = message["iframe1a"];
+              }
               setTimeout(() => {
                 var iframeWin =
                   document.getElementById("da-iframe2").contentWindow;
                 iframeWin.postMessage(messagesObj, "http://127.0.0.1:5500");
               }, 1000);
-            }
           }
         }
-
         console.log("messagesObj: ", messagesObj);
       }
 
@@ -67,6 +70,12 @@
     <iframe
       id="da-iframe"
       src="./frame1.htm"
+      frameborder="1"
+      style="display: block; height: 300px; border: 1px solid black"
+    ></iframe>
+    <iframe
+      id="da-iframea"
+      src="./frame1a.htm"
       frameborder="1"
       style="display: block; height: 300px; border: 1px solid black"
     ></iframe>
@@ -113,7 +122,10 @@
     function scrollToFrame(evt) {
       console.log("scrollToFrame: ", evt);
       // document.getElementById("da-iframe9").scrollIntoView();
-      document.getElementById("iframes").getElementsByTagName("iframe")[evt.id].scrollIntoView();
+      document
+        .getElementById("iframes")
+        .getElementsByTagName("iframe")
+        [evt.id].scrollIntoView();
     }
 
     function scrollTop(evt) {

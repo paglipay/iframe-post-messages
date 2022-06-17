@@ -24,6 +24,7 @@
     <h1>Frame 2</h1>
     <button id="changeBtn">Change them all</button>
     <div id="btns"></div>
+    <div id="btnsA"></div>
     <div id="scrlBtns"></div>
   </body>
   <script>
@@ -50,6 +51,7 @@
       console.log("displayMessage message: ", message);
       // document.getElementById("root").innerHTML = message["bodydiv"];
       var doc = new DOMParser().parseFromString(message["iframe1"], "text/xml");
+      var doca = new DOMParser().parseFromString(message["iframe1a"], "text/xml");
       var doc2 = new DOMParser().parseFromString(message["iframes"], "text/xml");
       console.log("frame2 doc: ", doc);
       // console.log(
@@ -58,36 +60,65 @@
       // );
 
       createBtns(doc);
+      // createBtnsA(doca);
       createScrollBtns(doc2);
     }
 
-    const createBtns = (doc) => {
-      const btnsDiv = document.getElementById("btns");
-      btnsDiv.innerHTML = "";
-      var iframeWin = parent;
-      for (
-        let b = 0;
-        b < doc.getElementsByName("received-message").length;
-        b++
-      ) {
-        const btn = document.createElement("button");
-        // btn.innerHTML = "Show " + (b + 1);
-        btn.innerHTML =
-          "" + doc.getElementsByName("received-message")[b].innerHTML;
-        // btn.innerHTML += "" + doc.getElementsByName("received-message")[b].id;
-        btn.onclick = function () {
-          iframeWin.postMessage(
-            {
-              // message: b,
-              action: { type: "tabSwitch", payload: { id: b } },
-            },
-            "http://127.0.0.1:5500"
-          );
-          return false;
-        };
-        btnsDiv.appendChild(btn);
-      }
+const createBtns = (doc) => {
+  const btnsDiv = document.getElementById("btns");
+  btnsDiv.innerHTML = "";
+  var iframeWin = parent;
+  for (
+    let b = 0;
+    b < doc.getElementsByName("received-message").length;
+    b++
+  ) {
+    const btn = document.createElement("button");
+    // btn.innerHTML = "Show " + (b + 1);
+    btn.innerHTML =
+      "" + doc.getElementsByName("received-message")[b].innerHTML;
+    // btn.innerHTML += "" + doc.getElementsByName("received-message")[b].id;
+    btn.onclick = function () {
+      iframeWin.postMessage(
+        {
+          // message: b,
+          action: { type: "tabSwitch", payload: { id: b } },
+        },
+        "http://127.0.0.1:5500"
+      );
+      return false;
     };
+    btnsDiv.appendChild(btn);
+  }
+};
+
+const createBtnsA = (doc) => {
+  const btnsDiv = document.getElementById("btnsA");
+  btnsDiv.innerHTML = "";
+  var iframeWin = parent;
+  for (
+    let b = 0;
+    b < doc.getElementsByName("received-message").length;
+    b++
+  ) {
+    const btn = document.createElement("button");
+    // btn.innerHTML = "Show " + (b + 1);
+    btn.innerHTML =
+      "" + doc.getElementsByName("received-message")[b].innerHTML;
+    // btn.innerHTML += "" + doc.getElementsByName("received-message")[b].id;
+    btn.onclick = function () {
+      iframeWin.postMessage(
+        {
+          // message: b,
+          action: { type: "tabSwitch", payload: { id: b } },
+        },
+        "http://127.0.0.1:5500"
+      );
+      return false;
+    };
+    btnsDiv.appendChild(btn);
+  }
+};
 
     const createScrollBtns = (doc) => {
       const btnsDiv = document.getElementById("scrlBtns");
