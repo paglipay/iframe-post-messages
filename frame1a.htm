@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      .hide {
+        display: none;
+      }
+
+      .show {
+        display: block;
+        border: black;
+        border-style: solid;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="bodydiv">
+      <h1>Frame 1a</h1>
+      <div id="received-message1" name="received-message" class="show">
+        <h1>1a</h1>
+      </div>
+      <div id="received-message2" name="received-message" class="hide">
+        <h1>2a</h1>
+      </div>
+      <div id="received-message3" name="received-message" class="hide">
+        <h1>3a</h1>
+      </div>
+    </div>
+  </body>
+  <script>
+    function displayMessage(evt) {
+      let id = 0;
+      if (evt.origin !== "http://127.0.0.1:5500") {
+        console.log("Incorrect evt.origin");
+      } else {
+        id = evt.data.id;
+        const divs = document.getElementsByName("received-message");
+        for (let d = 0; d < divs.length; d++) {
+          if (d === id) {
+            divs[d].setAttribute("class", "show");
+          } else {
+            divs[d].setAttribute("class", "hide");
+          }
+        }
+      }
+
+      console.log("evt.data: ", evt.data);
+      const col = document.getElementById("bodydiv");
+      console.log(col);
+    }
+
+    if (window.addEventListener) {
+      // For standards-compliant web browsers
+      window.addEventListener("message", displayMessage, false);
+    } else {
+      window.attachEvent("onmessage", displayMessage);
+    }
+    window.onload = function () {
+      const col = document.getElementById("bodydiv");
+      console.log("iframe1a:", col);
+      window.parent.postMessage(
+        { iframe1a: col.outerHTML, action: { type: "", payload: {} } },
+        "http://127.0.0.1:5500"
+      );
+    };
+  </script>
+</html>
