@@ -13,8 +13,10 @@
     />
     <script>
       let messagesObj = {};
+
       window.onload = function () {
         console.log("onload");
+
         const col = document.getElementById("iframes");
         console.log(col);
         messagesObj["iframes"] = col.outerHTML;
@@ -71,6 +73,7 @@
           console.log("iframes: ", iframes[i].id);
           var iframeWin = document.getElementById(iframes[i].id).contentWindow;
           if (id === iframes[i].id) {
+            // iframeWin.playVid();
             iframeWin.postMessage(
               {
                 action: { type: "playVid" },
@@ -78,6 +81,7 @@
               "http://127.0.0.1:5500"
             );
           } else {
+            // iframeWin.myStopFunction();
             iframeWin.postMessage(
               {
                 action: { type: "clearInterval" },
@@ -184,5 +188,75 @@
     function vidPlay(evt) {
       console.log("vidPlay", evt);
     }
+
+    let iframeState = {};
+    let iframes = document
+      .getElementById("iframes")
+      .getElementsByTagName("iframe");
+
+    for (let i = 0; i < iframes.length; i++) {
+      // console.log("iframes: ", iframes[i].id, iframes[i].offsetTop);
+      var iframeWin = document.getElementById(iframes[i].id).contentWindow;
+      iframeState[i] = { shouldPlay: false, hasPlayed: false };
+    }
+
+    document.addEventListener("scroll", () => {
+      // console.log("pageYOffset", window.pageYOffset);
+      // console.log(
+      //   "first",
+      //   document
+      //   .getElementById("iframes")
+      //   .getElementsByTagName("iframe")
+      //   [2].offsetTop
+      // );
+
+      for (let i = 0; i < iframes.length; i++) {
+        // console.log("iframes: ", iframes[i].id, iframes[i].offsetTop);
+        var iframeWin = document.getElementById(iframes[i].id).contentWindow;
+        if (iframes[i].offsetTop - 500 < window.pageYOffset) {
+          iframeState[i]['shouldPlay'] = true;
+        } else {
+          iframeState[i]['shouldPlay'] = false;
+        }
+      }
+
+      for (let i = 0; i < iframes.length; i++) {
+        i > 0 &&
+          iframeState[i]["shouldPlay"] === true &&
+          (iframeState[i - 1]["shouldPlay"] = false);
+      }
+
+      for (let i = 0; i < iframes.length; i++) {
+        // console.log("iframes: ", iframes[i].id, iframes[i].offsetTop);
+        console.log("iframeState: ", i, iframeState[i]);
+
+        var iframeWin = document.getElementById(iframes[i].id).contentWindow;
+        if (
+          iframeState[i]["shouldPlay"] === true &&
+          iframeState[i]["hasPlayed"] === false
+        ) {
+          // iframeWin.playVid();
+          iframeState[i]["hasPlayed"] = true;
+          iframeWin.postMessage(
+            {
+              action: { type: "playVid" },
+            },
+            "http://127.0.0.1:5500"
+          );
+        } 
+        else if (
+          iframeState[i]["shouldPlay"] === false &&
+          iframeState[i]["hasPlayed"] === true) {
+          // iframeWin.myStopFunction();
+          iframeState[i]["hasPlayed"] = false;
+          iframeWin.postMessage(
+            {
+              action: { type: "clearInterval" },
+            },
+            "http://127.0.0.1:5500"
+          );
+        }
+      }
+    });
   </script>
 </html>

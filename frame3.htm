@@ -11,10 +11,29 @@
       crossorigin="anonymous"
     />
     <title>Document</title>
+    <style>
+      .spinner {
+        width: 64px;
+        height: 64px;
+        border: 8px solid;
+        border-color: #3d5af1 transparent #3d5af1 transparent;
+        border-radius: 50%;
+        transition: all 1s ease;
+        /* animation: spin 1.2s linear infinite; */
+      }
+      /* @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            } */
+    </style>
   </head>
-  <body>
+  <body textAlign="center">
     <h1>Frame3</h1>
     <!-- <video width="320"  height="240" src="Davis_5109iPadFig3.m4v" controls="controls"> </video> -->
+    <div class="spinner" id="spinner"></div>
     <div class="progress">
       <div
         id="player"
@@ -30,13 +49,15 @@
 
       function playVid() {
         const player = document.getElementById("player");
+        const spinner = document.getElementById("spinner");
         let count = 0;
         myInterval = setInterval(() => {
-          count > 100 ? (count = 0) : (count = count + 10);
+          count > 100 ? (count = 0) : (count = count + 5);
           //   console.log("count", count);
           //   aria-valuenow="25"
           player.setAttribute("style", `width: ${count}%`);
-        }, 100);
+          spinner.style.transform = `rotate(${count % 2 === 0 ? 0 : 360}deg)`;
+        }, 1000);
       }
 
       function myStopFunction() {
