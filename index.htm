@@ -213,17 +213,12 @@
       for (let i = 0; i < iframes.length; i++) {
         // console.log("iframes: ", iframes[i].id, iframes[i].offsetTop);
         var iframeWin = document.getElementById(iframes[i].id).contentWindow;
-        if (iframes[i].offsetTop - 500 < window.pageYOffset) {
+        if (iframes[i].offsetTop - 700 < window.pageYOffset) {
           iframeState[i]['shouldPlay'] = true;
+          i > 0 && (iframeState[i - 1]["shouldPlay"] === true) && (iframeState[i - 1]["shouldPlay"] = false);
         } else {
           iframeState[i]['shouldPlay'] = false;
         }
-      }
-
-      for (let i = 0; i < iframes.length; i++) {
-        i > 0 &&
-          iframeState[i]["shouldPlay"] === true &&
-          (iframeState[i - 1]["shouldPlay"] = false);
       }
 
       for (let i = 0; i < iframes.length; i++) {

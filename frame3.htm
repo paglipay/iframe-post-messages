@@ -18,7 +18,7 @@
         border: 8px solid;
         border-color: #3d5af1 transparent #3d5af1 transparent;
         border-radius: 50%;
-        transition: all 1s ease;
+        transition: all .5s ease;
         /* animation: spin 1.2s linear infinite; */
       }
       /* @keyframes spin {
@@ -57,7 +57,7 @@
           //   aria-valuenow="25"
           player.setAttribute("style", `width: ${count}%`);
           spinner.style.transform = `rotate(${count % 2 === 0 ? 0 : 360}deg)`;
-        }, 1000);
+        }, 500);
       }
 
       function myStopFunction() {
