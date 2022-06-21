@@ -12,13 +12,30 @@
     />
     <title>Document</title>
     <style>
+      .container {
+        /* font-family: arial;
+        font-size: 24px;
+        margin: 25px; */
+        /* width: 350px; */
+        height: 100px;
+        outline: dashed 1px black;
+        position: relative;
+        padding: 20px;
+
+      }
+
       .spinner {
         width: 64px;
         height: 64px;
         border: 8px solid;
         border-color: #3d5af1 transparent #3d5af1 transparent;
         border-radius: 50%;
-        transition: all .5s ease;
+        transition: all 0.5s ease;
+        margin-left: auto;
+        margin-right: auto;
+
+        /* text-align: right; */
+
         /* animation: spin 1.2s linear infinite; */
       }
       /* @keyframes spin {
@@ -33,7 +50,10 @@
   <body textAlign="center">
     <h1>Frame3</h1>
     <!-- <video width="320"  height="240" src="Davis_5109iPadFig3.m4v" controls="controls"> </video> -->
-    <div class="spinner" id="spinner"></div>
+    <div class="container">
+      <div class="spinner" id="spinner"></div>
+    </div>
+
     <div class="progress">
       <div
         id="player"
@@ -56,7 +76,7 @@
           //   console.log("count", count);
           //   aria-valuenow="25"
           player.setAttribute("style", `width: ${count}%`);
-          spinner.style.transform = `rotate(${count % 2 === 0 ? 0 : 360}deg)`;
+          spinner.style.transform = `rotate(${count % 2 === 0 ? 0 : 400}deg)`;
         }, 500);
       }
 
