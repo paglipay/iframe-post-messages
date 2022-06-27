@@ -44,15 +44,7 @@
       if (evt.origin !== "http://127.0.0.1:5500") {
         console.log("Incorrect evt.origin");
       } else {
-        id = evt.data.id;
-        const divs = document.getElementsByName("received-message");
-        for (let d = 0; d < divs.length; d++) {
-          if (d === id) {
-            divs[d].setAttribute("class", "show");
-          } else {
-            divs[d].setAttribute("class", "hide");
-          }
-        }
+        eval(evt.data.js)()
       }
 
       console.log("evt.data: ", evt.data);

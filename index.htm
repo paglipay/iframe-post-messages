@@ -98,7 +98,7 @@
     <h1>Parent</h1>
 
     <iframe
-      sandbox="allow-scripts allow-popups allow-same-origin"
+      sandbox="allow-scripts allow-same-origin"
       id="da-iframe2"
       src="./frame2.htm"
       frameborder="1"
@@ -178,17 +178,7 @@
     function tabSwitch(evt) {
       console.log("tabSwitch: ", evt);
       var iframeWin = document.getElementById("da-iframe").contentWindow;
-      // iframeWin.postMessage(evt, "http://127.0.0.1:5500");
-
-      id = evt.id;
-      const divs = iframeWin.document.getElementsByName("received-message");
-      for (let d = 0; d < divs.length; d++) {
-        if (d === id) {
-          divs[d].setAttribute("class", "show");
-        } else {
-          divs[d].setAttribute("class", "hide");
-        }
-      }
+      iframeWin.postMessage(evt, "http://127.0.0.1:5500");
     }
 
     function customTab(evt) {
