@@ -12,6 +12,19 @@
     />
     <title>Document</title>
     <style>
+      .rotate-image {
+        animation: rotation 2s linear infinite;
+      }
+
+      @keyframes rotation {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(359deg);
+        }
+      }
+
       .container {
         /* font-family: arial;
         font-size: 24px;
@@ -21,7 +34,6 @@
         outline: dashed 1px black;
         position: relative;
         padding: 20px;
-
       }
 
       .spinner {
@@ -30,7 +42,7 @@
         border: 8px solid;
         border-color: #3d5af1 transparent #3d5af1 transparent;
         border-radius: 50%;
-        transition: all 0.5s ease;
+        /* transition: all 0.5s ease; */
         margin-left: auto;
         margin-right: auto;
 
@@ -71,16 +83,20 @@
         const player = document.getElementById("player");
         const spinner = document.getElementById("spinner");
         let count = 0;
+
+        spinner.setAttribute("class", "spinner rotate-image");
         myInterval = setInterval(() => {
           count > 100 ? (count = 0) : (count = count + 5);
           //   console.log("count", count);
           //   aria-valuenow="25"
           player.setAttribute("style", `width: ${count}%`);
-          spinner.style.transform = `rotate(${count % 2 === 0 ? 0 : 400}deg)`;
+        //   spinner.style.transform = `rotate(${count % 2 === 0 ? 0 : 400}deg)`;
         }, 500);
       }
 
       function myStopFunction() {
+        const spinner = document.getElementById("spinner");
+        spinner.setAttribute("class", "spinner");
         clearInterval(myInterval);
       }
 
@@ -119,8 +135,8 @@
               playVid();
               break;
             case "clearInterval":
-              console.log("clearInterval:");
-              clearInterval(myInterval);
+              console.log("myStopFunction:");
+              myStopFunction();
               break;
             default:
               break;

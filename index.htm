@@ -98,7 +98,7 @@
     <h1>Parent</h1>
 
     <iframe
-      sandbox="allow-scripts allow-popups"
+      sandbox="allow-scripts allow-popups allow-same-origin"
       id="da-iframe2"
       src="./frame2.htm"
       frameborder="1"
@@ -178,7 +178,17 @@
     function tabSwitch(evt) {
       console.log("tabSwitch: ", evt);
       var iframeWin = document.getElementById("da-iframe").contentWindow;
-      iframeWin.postMessage(evt, "http://127.0.0.1:5500");
+      // iframeWin.postMessage(evt, "http://127.0.0.1:5500");
+
+      id = evt.id;
+      const divs = iframeWin.document.getElementsByName("received-message");
+      for (let d = 0; d < divs.length; d++) {
+        if (d === id) {
+          divs[d].setAttribute("class", "show");
+        } else {
+          divs[d].setAttribute("class", "hide");
+        }
+      }
     }
 
     function customTab(evt) {
@@ -213,11 +223,13 @@
       for (let i = 0; i < iframes.length; i++) {
         // console.log("iframes: ", iframes[i].id, iframes[i].offsetTop);
         var iframeWin = document.getElementById(iframes[i].id).contentWindow;
-        if (iframes[i].offsetTop - 700 < window.pageYOffset) {
-          iframeState[i]['shouldPlay'] = true;
-          i > 0 && (iframeState[i - 1]["shouldPlay"] === true) && (iframeState[i - 1]["shouldPlay"] = false);
+        if (iframes[i].offsetTop - 600 < window.pageYOffset) {
+          iframeState[i]["shouldPlay"] = true;
+          i > 0 &&
+            iframeState[i - 1]["shouldPlay"] === true &&
+            (iframeState[i - 1]["shouldPlay"] = false);
         } else {
-          iframeState[i]['shouldPlay'] = false;
+          iframeState[i]["shouldPlay"] = false;
         }
       }
 
@@ -238,10 +250,10 @@
             },
             "http://127.0.0.1:5500"
           );
-        } 
-        else if (
+        } else if (
           iframeState[i]["shouldPlay"] === false &&
-          iframeState[i]["hasPlayed"] === true) {
+          iframeState[i]["hasPlayed"] === true
+        ) {
           // iframeWin.myStopFunction();
           iframeState[i]["hasPlayed"] = false;
           iframeWin.postMessage(
