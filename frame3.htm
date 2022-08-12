@@ -125,9 +125,9 @@
       function messageReceived(evt) {
         let message;
         let i = 1;
-        if (evt.origin !== "http://127.0.0.1:5500") {
-          message = "Incorrect evt.origin";
-        } else {
+        // if (evt.origin !== "http://127.0.0.1:5500") {
+        //   message = "Incorrect evt.origin";
+        // } else {
           message = evt.data;
 
           switch (message["action"]["type"]) {
@@ -141,7 +141,8 @@
             default:
               break;
           }
-        }
+        // }
+        console.log("messageReceived: ", message)
       }
     </script>
   </body>
