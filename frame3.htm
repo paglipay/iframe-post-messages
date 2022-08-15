@@ -90,7 +90,7 @@
           //   console.log("count", count);
           //   aria-valuenow="25"
           player.setAttribute("style", `width: ${count}%`);
-        //   spinner.style.transform = `rotate(${count % 2 === 0 ? 0 : 400}deg)`;
+          //   spinner.style.transform = `rotate(${count % 2 === 0 ? 0 : 400}deg)`;
         }, 500);
       }
 
@@ -125,24 +125,22 @@
       function messageReceived(evt) {
         let message;
         let i = 1;
-        // if (evt.origin !== "http://127.0.0.1:5500") {
-        //   message = "Incorrect evt.origin";
-        // } else {
-          message = evt.data;
 
-          switch (message["action"]["type"]) {
-            case "playVid":
-              playVid();
-              break;
-            case "clearInterval":
-              console.log("myStopFunction:");
-              myStopFunction();
-              break;
-            default:
-              break;
-          }
-        // }
-        console.log("messageReceived: ", message)
+        message = evt.data;
+
+        switch (message["action"]["type"]) {
+          case "playVid":
+            playVid();
+            break;
+          case "clearInterval":
+            console.log("myStopFunction:");
+            myStopFunction();
+            break;
+          default:
+            break;
+        }
+
+        console.log("frame3.htm message: ", message);
       }
     </script>
   </body>
